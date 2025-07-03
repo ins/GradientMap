@@ -10,10 +10,16 @@ class GradientMapTool {
         this.originalImage = null;
         this.gradientStops = [];
         this.copyTimeout = null;
+        this.gradientPresets = [];
+        this.selectedPresetIndex = null;
+        this.gradientPresetsContainer = document.getElementById('gradientPresets');
+        this.saveGradientBtn = document.getElementById('saveGradientBtn');
 
         this.setupEventListeners();
         this.loadFromURL();
         this.showUploadArea();
+        this.loadPresetsFromStorage();
+        this.renderPresets();
     }
 
     setupEventListeners() {
@@ -23,6 +29,24 @@ class GradientMapTool {
         this.copyBtn.addEventListener('click', () => this.copyToClipboard());
         this.setupUploadAreaEvents();
         this.setupKeyboardShortcuts();
+        this.saveGradientBtn.addEventListener('click', () => this.saveCurrentGradientAsPreset());
+        // Keyboard delete for selected preset, only if color input is not focused
+        document.addEventListener('keydown', (e) => {
+            if (
+                this.selectedPresetIndex !== null &&
+                (e.key === 'Delete' || e.key === 'Backspace') &&
+                document.activeElement !== this.colorInput
+            ) {
+                this.deleteSelectedPreset();
+            }
+        });
+        // When color input changes, clear selected preset
+        this.colorInput.addEventListener('input', () => {
+            if (this.selectedPresetIndex !== null) {
+                this.selectedPresetIndex = null;
+                this.renderPresets();
+            }
+        });
     }
 
     setupUploadAreaEvents() {
@@ -402,6 +426,71 @@ class GradientMapTool {
             console.warn('Failed to load colors from URL:', e);
         }
         this.updateGradient();
+    }
+
+    saveCurrentGradientAsPreset() {
+        const colors = this.colorInput.value.trim();
+        if (!colors || this.gradientStops.length === 0) return;
+        // Prevent duplicate presets
+        if (this.gradientPresets.some(p => p.colors === colors)) return;
+        this.gradientPresets.push({ colors });
+        this.selectedPresetIndex = this.gradientPresets.length - 1;
+        this.savePresetsToStorage();
+        this.renderPresets();
+    }
+
+    renderPresets() {
+        this.gradientPresetsContainer.innerHTML = '';
+        this.gradientPresets.forEach((preset, idx) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'gradient-preset-btn' + (this.selectedPresetIndex === idx ? ' selected' : '');
+            btn.title = preset.colors;
+            btn.style.background = this.getGradientPreviewStyle(preset.colors);
+            btn.setAttribute('tabindex', '0');
+            btn.addEventListener('click', () => {
+                this.selectedPresetIndex = idx;
+                this.colorInput.value = preset.colors;
+                this.updateGradient();
+                this.renderPresets();
+            });
+            this.gradientPresetsContainer.appendChild(btn);
+        });
+    }
+
+    getGradientPreviewStyle(colors) {
+        const stops = this.parseColorInput(colors);
+        if (stops.length === 0) return '#ccc';
+        return `linear-gradient(to right, ${stops.map(stop => `${stop.color} ${stop.position * 100}%`).join(', ')})`;
+    }
+
+    deleteSelectedPreset() {
+        if (this.selectedPresetIndex === null) return;
+        this.gradientPresets.splice(this.selectedPresetIndex, 1);
+        // Always clear selection after delete
+        this.selectedPresetIndex = null;
+        this.savePresetsToStorage();
+        this.renderPresets();
+    }
+
+    savePresetsToStorage() {
+        try {
+            localStorage.setItem('gradientPresets', JSON.stringify(this.gradientPresets));
+        } catch (e) {
+            console.warn('Failed to save presets:', e);
+        }
+    }
+
+    loadPresetsFromStorage() {
+        try {
+            const data = localStorage.getItem('gradientPresets');
+            if (data) {
+                this.gradientPresets = JSON.parse(data);
+            }
+        } catch (e) {
+            this.gradientPresets = [];
+        }
+        this.selectedPresetIndex = null;
     }
 }
 
