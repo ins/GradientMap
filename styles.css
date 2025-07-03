@@ -1,3 +1,7 @@
+:root {
+    --radius: 4px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,64 +9,50 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Geist', sans-serif;
+    font-size: 0.875rem;
     background: #ffffff;
-    height: 100vh;
-    overflow: hidden;
     color: #333;
-}
-
-.container {
-    width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 24px;
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
 }
 
 .settings {
-    width: 50%;
-    padding: 40px;
-    border-right: 1px solid #e0e0e0;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    gap: 0.5rem;
 }
 
-.right-panel {
-    width: 50%;
-    position: relative;
-    height: 100vh;
-}
-
-.header {
-    margin-bottom: 30px;
-}
-
-.header h1 {
+h1 {
     font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.control-group {
-    margin-bottom: 20px;
-}
-
-.control-group label {
-    display: block;
-    margin-bottom: 5px;
     font-weight: 500;
-    color: #333;
-    font-size: 0.9rem;
+    margin-bottom: 0px;
+    letter-spacing: -0.01em;
+}
+
+.help-text {
+    color: #666;
+    line-height: 1.4;
+    text-wrap: pretty;
 }
 
 .color-input {
     width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    font-size: 14px;
-    font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
-    background: #ffffff;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 2.5rem;
+    border: 1px solid #eee;
+    font-family: 'Geist Mono', monospace;
+    font-size: 1rem;
+    background: #eee;
     text-transform: uppercase;
+    border-radius: var(--radius);
+   
 }
 
 .color-input:focus {
@@ -71,68 +61,75 @@ body {
 }
 
 .gradient-preview {
-    height: 20px;
-    border: 1px solid #ddd;
-    margin-top: 8px;
+    height: 2.5rem;
+   border: none;
     background: linear-gradient(to right, #000, #fff);
-}
-
-.help-text {
-    margin-top: 8px;
-    font-size: 0.8rem;
-    color: #666;
-    line-height: 1.4;
+    border-radius: var(--radius);
 }
 
 .actions {
-    margin-top: 20px;
     display: flex;
-    gap: 8px;
+    gap: 0.5em;
+}
+
+.btn, .btn-primary, .upload-area, canvas {
+    transition: background 0.18s cubic-bezier(0.4,0,0.2,1),
+                color 0.18s cubic-bezier(0.4,0,0.2,1),
+                box-shadow 0.18s cubic-bezier(0.4,0,0.2,1),
+                border-color 0.18s cubic-bezier(0.4,0,0.2,1);
 }
 
 .btn {
-    padding: 8px 16px;
-    border: 1px solid #ddd;
-    background: #ffffff;
-    font-size: 13px;
+    font-family: inherit;
+    padding-left: 1em;
+    padding-right: 1em;
+    height: 2.5rem;
+    border: none;
+    background: transparent;
     font-weight: 500;
-    cursor: pointer;
-    color: #333;
+    color: #666;
+    border-radius: var(--radius);
+    font-size: inherit;
 }
 
 .btn:hover {
-    background: #f5f5f5;
+    background: #eee;
     border-color: #999;
+    color: #000;
 }
 
 .btn-primary {
     background: #333;
     color: white;
-    border-color: #333;
+    border-color: none;
 }
 
 .btn-primary:hover {
-    background: #555;
-    border-color: #555;
+    background: #000;
+    color: white;
 }
 
 .upload-area {
     width: 100%;
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23808080FF' stroke-width='4' stroke-dasharray='4%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
-    border-radius: 8px;
+    background: #eee;
+    border: none;
+    border-radius: var(--radius);
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 40px;
-    margin: 20px;
+    padding: 2rem;
+    min-height: 20rem;
     box-sizing: border-box;
+    margin: 0;
+    text-align: center;
 }
 
 .upload-area:hover, .upload-area.dragover {
-    border-color: #999;
+    box-shadow: 0 0 0 2px white, 0 0 0 4px black;
+    cursor: pointer;
+
 }
 
 .upload-area input[type="file"] {
@@ -142,60 +139,29 @@ body {
     width: 100%;
     height: 100%;
     opacity: 0;
-    cursor: pointer;
 }
 
 .upload-text {
-    font-size: 1rem;
     color: #666;
-    margin-bottom: 5px;
+    text-align: center;
 }
 
-.image-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.image-container canvas {
+canvas {
     max-width: 100%;
-    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: inline-block;
+    image-rendering: auto;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--radius);
     cursor: pointer;
+}
+
+canvas:hover {
+    box-shadow: 0 0 0 2px white, 0 0 0 4px black;
 }
 
 .hidden {
     display: none;
-}
-
-@media (max-width: 768px) {
-    body {
-        height: auto;
-        overflow: auto;
-    }
-    
-    .container {
-        flex-direction: column;
-        height: auto;
-        min-height: 100vh;
-    }
-    
-    .settings {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-        padding: 20px;
-    }
-    
-    .right-panel {
-        width: 100%;
-        height: 400px;
-    }
-    
-    .upload-area {
-        margin: 10px;
-        padding: 20px;
-    }
 } 
