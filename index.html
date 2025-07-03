@@ -13,7 +13,8 @@
         <h1>Gradient Map Tool</h1>
         
             <div class="help-text">Enter colors separated by spaces or commas. Supports hex codes with or without #. Add custom stops with -percentage, e.g. FF0000-25 places red at 25%. Colors are saved in the URL, so you can bookmark or share your palette.</div>
-            <input type="text" id="colorInput" class="color-input" placeholder="000000 FFFFFF" value="0F1113 2E3237-20 FF5019-68 DE9D50-79 C8C8C3-90 DEDEDB">
+            <input type="text" id="colorInput" class="color-input" placeholder="000000 FFFFFF" value="0F1113 2E3237-20 FF5019-68 DE9D50-79 C8C8C3-90 DEDEDB" aria-label="Gradient colors" aria-describedby="colorInputHelp">
+            <div id="colorInputHelp" class="visually-hidden">Enter colors as hex codes, separated by spaces or commas. Add -percentage for custom stops.</div>
             <div class="gradient-preview" id="gradientPreview"></div>
         
         <div class="actions">
@@ -23,7 +24,7 @@
     </section>
 
     <div class="upload-area" id="uploadArea">
-        <input type="file" id="fileInput" accept="image/*">
+        <input type="file" id="fileInput" accept="image/*" tabindex="-1" aria-hidden="true">
         <div class="upload-text">Drop here, click to browse, or paste image from clipboard</div>
     </div>
 

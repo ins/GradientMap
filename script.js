@@ -134,7 +134,10 @@ class GradientMapTool {
                     return;
                 }
             }
-        } catch (err) {}
+        } catch (err) {
+            // Log warning for debugging, but do not break UX
+            console.warn('Clipboard read failed or not supported:', err);
+        }
         this.createPasteArea();
     }
 
@@ -394,7 +397,10 @@ class GradientMapTool {
             if (colors) {
                 this.colorInput.value = decodeURIComponent(colors);
             }
-        } catch (e) {}
+        } catch (e) {
+            // Log warning for debugging, but do not break UX
+            console.warn('Failed to load colors from URL:', e);
+        }
         this.updateGradient();
     }
 }
